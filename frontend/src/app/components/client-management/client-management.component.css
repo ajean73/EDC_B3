@@ -1,0 +1,148 @@
+:host {
+  display: block;
+}
+
+.client-management-layout {
+  min-height: 100vh;
+  padding: 2rem 1rem 3rem;
+  background:
+    radial-gradient(circle at 10% 10%, #ffd8a8 0%, transparent 35%),
+    radial-gradient(circle at 90% 20%, #a5d8ff 0%, transparent 30%),
+    linear-gradient(180deg, #f8f9fa 0%, #eef4ff 100%);
+  font-family: 'Barlow', 'Segoe UI', sans-serif;
+  color: #1f2a44;
+}
+
+.hero-panel {
+  max-width: 1080px;
+  margin: 0 auto 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid #dbe4ff;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(6px);
+}
+
+.eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.15rem;
+  font-size: 0.75rem;
+  color: #335c67;
+}
+
+h1 {
+  margin: 0.25rem 0 0.5rem;
+  font-size: 2rem;
+}
+
+.subtitle {
+  margin: 0;
+}
+
+.content-grid {
+  display: grid;
+  gap: 1rem;
+  max-width: 1080px;
+  margin: 0 auto;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #dbe4ff;
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: 0 10px 30px rgba(38, 57, 77, 0.08);
+}
+
+.card h2 {
+  margin-top: 0;
+}
+
+.client-form {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.client-form input {
+  border: 1px solid #c8d5f7;
+  border-radius: 0.6rem;
+  min-height: 2.5rem;
+  padding: 0 0.75rem;
+}
+
+.actions-row {
+  display: flex;
+  gap: 0.7rem;
+  margin-top: 0.25rem;
+}
+
+.primary-btn,
+.secondary-btn,
+.client-list button {
+  min-height: 2.4rem;
+  border-radius: 0.6rem;
+  border: 0;
+  cursor: pointer;
+  padding: 0.4rem 0.8rem;
+}
+
+.primary-btn {
+  background: #1d4ed8;
+  color: #ffffff;
+}
+
+.secondary-btn {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.feedback {
+  margin-top: 0.8rem;
+}
+
+.feedback.success {
+  color: #166534;
+}
+
+.feedback.error {
+  color: #b91c1c;
+}
+
+.client-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.client-list li {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.7rem;
+  padding: 0.8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.client-list p {
+  margin: 0.25rem 0;
+}
+
+.client-list button {
+  background: #dbeafe;
+  color: #1e3a8a;
+}
+
+@media (max-width: 900px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+  }
+}

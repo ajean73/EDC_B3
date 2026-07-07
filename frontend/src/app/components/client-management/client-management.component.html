@@ -1,0 +1,50 @@
+<section class="client-management-layout">
+  <header class="hero-panel">
+    <p class="eyebrow">ShopWise</p>
+    <h1>Gestion Clients</h1>
+    <p class="subtitle">Creer et mettre a jour les fiches clients pour preparer la fidelisation.</p>
+  </header>
+
+  <div class="content-grid">
+    <article class="card">
+      <h2>{{ selectedClientId ? 'Modifier un client' : 'Creer un client' }}</h2>
+      <form (ngSubmit)="submitForm()" class="client-form">
+        <label for="nom">Nom</label>
+        <input id="nom" name="nom" type="text" [(ngModel)]="formModel.nom" required />
+
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" [(ngModel)]="formModel.email" required />
+
+        <label for="telephone">Telephone</label>
+        <input id="telephone" name="telephone" type="text" [(ngModel)]="formModel.telephone" />
+
+        <div class="actions-row">
+          <button type="submit" class="primary-btn">
+            {{ selectedClientId ? 'Mettre a jour' : 'Creer' }}
+          </button>
+          <button type="button" class="secondary-btn" (click)="resetForm()">Reinitialiser</button>
+        </div>
+      </form>
+
+      <p class="feedback success" *ngIf="successMessage">{{ successMessage }}</p>
+      <p class="feedback error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    </article>
+
+    <article class="card">
+      <h2>Liste des clients</h2>
+      <p *ngIf="loading">Chargement en cours...</p>
+      <p *ngIf="!loading && clients.length === 0">Aucun client enregistre pour le moment.</p>
+
+      <ul class="client-list" *ngIf="!loading && clients.length > 0">
+        <li *ngFor="let client of clients">
+          <div>
+            <strong>{{ client.nom }}</strong>
+            <p>{{ client.email }} · {{ client.telephone || 'Telephone non renseigne' }}</p>
+            <small>{{ client.pointsFidelite }} points</small>
+          </div>
+          <button type="button" (click)="editClient(client)">Editer</button>
+        </li>
+      </ul>
+    </article>
+  </div>
+</section>
