@@ -1,0 +1,66 @@
+<div class="container">
+  <header>
+    <h1>Gestion des Rendez-vous</h1>
+    <p>Planifiez et suivez les rendez-vous de vos clients.</p>
+  </header>
+
+  <div class="content">
+    <div class="form-container card">
+      <h2>Planifier un rendez-vous</h2>
+      <form (ngSubmit)="submitForm()" #appointmentForm="ngForm">
+        <div class="form-group">
+          <label for="client">Client</label>
+          <select id="client" name="client" [(ngModel)]="formModel.clientId" required>
+            <option value="" disabled>Sélectionner un client</option>
+            <option *ngFor="let client of clients" [value]="client.id">
+              {{ client.nom }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="date">Date</label>
+          <input type="date" id="date" name="date" [(ngModel)]="formModel.date" required>
+        </div>
+
+        <div class="form-group">
+          <label for="time">Heure</label>
+          <input type="time" id="time" name="time" [(ngModel)]="formModel.time" required>
+        </div>
+
+        <div class="form-group">
+          <label for="service">Service</label>
+          <input type="text" id="service" name="service" placeholder="Ex: Coupe de cheveux" [(ngModel)]="formModel.service" required>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" [disabled]="!appointmentForm.form.valid">Planifier</button>
+          <button type="button" class="btn btn-secondary" (click)="resetForm()">Réinitialiser</button>
+        </div>
+      </form>
+      <p *ngIf="errorMessage" class="feedback error">{{ errorMessage }}</p>
+    </div>
+
+    <div class="list-container card">
+      <h2>Rendez-vous à venir</h2>
+      <div *ngIf="loading" class="loading-message">Chargement en cours...</div>
+      <div *ngIf="!loading && appointments.length === 0" class="no-data-message">
+        Aucun rendez-vous pour le moment.
+      </div>
+      <ul *ngIf="!loading && appointments.length > 0" class="appointment-list">
+        <li *ngFor="let appointment of appointments" class="appointment-item">
+          <div class="appointment-details">
+            <span class="client-name">{{ getClientName(appointment.clientId) }}</span>
+            <span class="appointment-service">{{ appointment.service }}</span>
+            <span class="appointment-datetime">{{ appointment.dateRendezVous | date:'dd/MM/yyyy HH:mm' }}</span>
+            <span class="appointment-status" [ngClass]="'status-' + appointment.statut.toLowerCase()">{{ appointment.statut }}</span>
+          </div>
+          <div class="appointment-actions" *ngIf="appointment.statut === 'PLANIFIE'">
+            <button class="btn btn-success" (click)="updateStatus(appointment.id, 'HONORE')">Honoré</button>
+            <button class="btn btn-danger" (click)="updateStatus(appointment.id, 'ANNULE')">Annulé</button>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

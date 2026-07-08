@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Client, ClientPayload } from '../../models/client.model';
 import { ClientApiService } from '../../services/client-api.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-client-management',
@@ -13,10 +14,11 @@ import { ClientApiService } from '../../services/client-api.service';
 })
 export class ClientManagementComponent implements OnInit {
   clients: Client[] = [];
-  selectedClientId: string | null = null;
   loading = false;
   errorMessage = '';
   successMessage = '';
+  selectedClientId: string | null = null;
+  newClient: { nom: string; prenom: string; telephone: string } = { nom: '', prenom: '', telephone: '' };
 
   formModel: ClientPayload = {
     nom: '',
@@ -24,7 +26,10 @@ export class ClientManagementComponent implements OnInit {
     telephone: ''
   };
 
-  constructor(private readonly clientApiService: ClientApiService) {}
+  constructor(
+    private readonly clientApiService: ClientApiService,
+    private readonly cdr: ChangeDetectorRef
+    ) {}
 
   ngOnInit(): void {
     this.loadClients();
@@ -33,11 +38,11 @@ export class ClientManagementComponent implements OnInit {
   loadClients(): void {
     this.loading = true;
     this.errorMessage = '';
-
     this.clientApiService.getClients().subscribe({
       next: (clients) => {
         this.clients = clients;
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.errorMessage = 'Impossible de charger les clients.';

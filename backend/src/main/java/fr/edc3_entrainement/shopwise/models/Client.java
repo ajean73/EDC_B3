@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
+import jakarta.persistence.OneToMany;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -19,6 +21,9 @@ public class Client {
     @Column(name = "points_fidelite")
     private int pointsFidelite;
 
+    @OneToMany(mappedBy = "client")
+    private List<RendezVous> rendezVous;
+
     public Client() {
     }
 
@@ -32,6 +37,7 @@ public class Client {
     public UUID getId() {
         return id;
     }
+
 
     public void setId(UUID id) {
         this.id = id;
