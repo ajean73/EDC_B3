@@ -18,6 +18,7 @@ public class Client {
     private String nom;
     private String email;
     private String telephone;
+    private String password;
     @Column(name = "points_fidelite")
     private int pointsFidelite;
 
@@ -66,6 +67,9 @@ public class Client {
     public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
+
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
     public int getPointsFidelite() {
         return pointsFidelite;

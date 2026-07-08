@@ -26,10 +26,12 @@ public class RendezVousServiceImpl implements RendezVousService {
 
     private final RendezVousRepository rendezVousRepository;
     private final ClientRepository clientRepository;
+    private final fr.edc3_entrainement.shopwise.repositories.LoyaltyTransactionRepository loyaltyTransactionRepository;
 
-    public RendezVousServiceImpl(RendezVousRepository rendezVousRepository, ClientRepository clientRepository) {
+    public RendezVousServiceImpl(RendezVousRepository rendezVousRepository, ClientRepository clientRepository, fr.edc3_entrainement.shopwise.repositories.LoyaltyTransactionRepository loyaltyTransactionRepository) {
         this.rendezVousRepository = rendezVousRepository;
         this.clientRepository = clientRepository;
+        this.loyaltyTransactionRepository = loyaltyTransactionRepository;
     }
 
     @Override
@@ -91,6 +93,14 @@ public class RendezVousServiceImpl implements RendezVousService {
         if (previousStatus != RendezVousStatus.HONORE && newStatus == RendezVousStatus.HONORE) {
             Client client = rendezVous.getClient();
             client.setPointsFidelite(client.getPointsFidelite() + POINTS_PER_HONORED_APPOINTMENT);
+            // persist a loyalty transaction
+            try {
+                fr.edc3_entrainement.shopwise.models.LoyaltyTransaction tx = new fr.edc3_entrainement.shopwise.models.LoyaltyTransaction(client, POINTS_PER_HONORED_APPOINTMENT, "Rendez-vous honoré");
+                if (loyaltyTransactionRepository != null) {
+                    loyaltyTransactionRepository.save(tx);
+                }
+            } catch (Exception ignore) {
+            }
         }
 
         RendezVous updatedRendezVous = rendezVousRepository.save(rendezVous);
