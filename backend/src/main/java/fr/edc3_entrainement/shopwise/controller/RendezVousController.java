@@ -3,12 +3,15 @@ package fr.edc3_entrainement.shopwise.controller;
 import fr.edc3_entrainement.shopwise.controller.dto.CreateRendezVousDto;
 import fr.edc3_entrainement.shopwise.controller.dto.RendezVousDto;
 import fr.edc3_entrainement.shopwise.controller.dto.UpdateRendezVousStatusDto;
+import fr.edc3_entrainement.shopwise.models.RendezVousStatus;
 import fr.edc3_entrainement.shopwise.service.RendezVousService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,8 +32,11 @@ public class RendezVousController {
     }
 
     @GetMapping
-    public List<RendezVousDto> getAllRendezVous() {
-        return rendezVousService.getAllRendezVous();
+    public List<RendezVousDto> getRendezVous(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam(required = false) RendezVousStatus statut,
+            @RequestParam(required = false) UUID clientId) {
+        return rendezVousService.getRendezVous(date, statut, clientId);
     }
 
     @PatchMapping("/{id}/status")

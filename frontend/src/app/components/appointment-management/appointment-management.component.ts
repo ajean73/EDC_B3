@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Appointment, CreateAppointmentPayload } from '../../models/appointment.model';
-import { AppointmentApiService } from '../../services/appointment-api.service';
+import { AppointmentApiService, AppointmentFilters } from '../../services/appointment-api.service';
 import { Client } from '../../models/client.model';
 import { ClientApiService } from '../../services/client-api.service';
 import { ChangeDetectorRef } from '@angular/core';
@@ -17,6 +17,7 @@ import { ChangeDetectorRef } from '@angular/core';
 export class AppointmentManagementComponent implements OnInit {
   appointments: Appointment[] = [];
   clients: Client[] = [];
+  readonly statusOptions: Array<'PLANIFIE' | 'HONORE' | 'ANNULE'> = ['PLANIFIE', 'HONORE', 'ANNULE'];
   loading = false;
   errorMessage = '';
   
@@ -30,6 +31,16 @@ export class AppointmentManagementComponent implements OnInit {
     date: '',
     time: '',
     service: ''
+  };
+
+  filterModel: {
+    date: string;
+    statut: '' | 'PLANIFIE' | 'HONORE' | 'ANNULE';
+    clientId: string;
+  } = {
+    date: '',
+    statut: '',
+    clientId: ''
   };
 
   constructor(
@@ -65,7 +76,7 @@ export class AppointmentManagementComponent implements OnInit {
   }
 
   loadAppointments(): void {
-    this.appointmentApiService.getAppointments().subscribe({
+    this.appointmentApiService.getAppointments(this.buildFilters()).subscribe({
       next: (appointments) => {
         this.appointments = appointments;
         this.loading = false;
@@ -76,6 +87,19 @@ export class AppointmentManagementComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  applyFilters(): void {
+    this.loadAppointments();
+  }
+
+  resetFilters(): void {
+    this.filterModel = {
+      date: '',
+      statut: '',
+      clientId: ''
+    };
+    this.loadAppointments();
   }
 
   submitForm(): void {
@@ -120,5 +144,23 @@ export class AppointmentManagementComponent implements OnInit {
       time: '',
       service: ''
     };
+  }
+
+  private buildFilters(): AppointmentFilters {
+    const filters: AppointmentFilters = {};
+
+    if (this.filterModel.date) {
+      filters.date = this.filterModel.date;
+    }
+
+    if (this.filterModel.statut) {
+      filters.statut = this.filterModel.statut;
+    }
+
+    if (this.filterModel.clientId) {
+      filters.clientId = this.filterModel.clientId;
+    }
+
+    return filters;
   }
 }

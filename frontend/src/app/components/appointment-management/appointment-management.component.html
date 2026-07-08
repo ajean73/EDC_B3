@@ -43,6 +43,32 @@
 
     <div class="list-container card">
       <h2>Rendez-vous à venir</h2>
+      <div class="filters-panel">
+        <div class="filters-grid">
+          <div class="form-group">
+            <label for="filter-date">Date</label>
+            <input id="filter-date" name="filterDate" type="date" [(ngModel)]="filterModel.date">
+          </div>
+          <div class="form-group">
+            <label for="filter-status">Statut</label>
+            <select id="filter-status" name="filterStatus" [(ngModel)]="filterModel.statut">
+              <option value="">Tous les statuts</option>
+              <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="filter-client">Client</label>
+            <select id="filter-client" name="filterClient" [(ngModel)]="filterModel.clientId">
+              <option value="">Tous les clients</option>
+              <option *ngFor="let client of clients" [value]="client.id">{{ client.nom }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-actions filter-actions">
+          <button class="btn btn-primary" type="button" (click)="applyFilters()">Filtrer</button>
+          <button class="btn btn-secondary" type="button" (click)="resetFilters()">Effacer les filtres</button>
+        </div>
+      </div>
       <div *ngIf="loading" class="loading-message">Chargement en cours...</div>
       <div *ngIf="!loading && appointments.length === 0" class="no-data-message">
         Aucun rendez-vous pour le moment.

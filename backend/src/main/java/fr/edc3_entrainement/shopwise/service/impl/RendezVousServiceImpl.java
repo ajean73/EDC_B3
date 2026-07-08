@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,8 +50,25 @@ public class RendezVousServiceImpl implements RendezVousService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<RendezVousDto> getAllRendezVous() {
-        return rendezVousRepository.findAll().stream()
+    public List<RendezVousDto> getRendezVous(LocalDate date, RendezVousStatus statut, UUID clientId) {
+        boolean hasDate = date != null;
+        boolean hasStatut = statut != null;
+        boolean hasClient = clientId != null;
+
+        LocalDateTime startDate = hasDate ? date.atStartOfDay() : LocalDate.of(1970, 1, 1).atStartOfDay();
+        LocalDateTime endDate = hasDate ? date.plusDays(1).atStartOfDay() : LocalDate.of(1970, 1, 2).atStartOfDay();
+        RendezVousStatus effectiveStatut = hasStatut ? statut : RendezVousStatus.PLANIFIE;
+        UUID effectiveClientId = hasClient ? clientId : new UUID(0L, 0L);
+
+        return rendezVousRepository.findByOptionalFilters(
+                hasDate,
+                startDate,
+                endDate,
+                hasStatut,
+                effectiveStatut,
+                hasClient,
+                effectiveClientId
+            ).stream()
                 .map(this::toDto)
                 .toList();
     }
