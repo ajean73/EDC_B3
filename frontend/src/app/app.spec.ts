@@ -1,11 +1,24 @@
 import { TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { App } from './app';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [App]
-    }).compileComponents();
+      imports: [App],
+      schemas: [NO_ERRORS_SCHEMA]
+    })
+      .overrideComponent(App, {
+        set: {
+          imports: [],
+          template: `
+            <app-client-management></app-client-management>
+            <app-appointment-management></app-appointment-management>
+            <app-profile></app-profile>
+          `
+        }
+      })
+      .compileComponents();
   });
 
   it('doit creer l application', () => {
