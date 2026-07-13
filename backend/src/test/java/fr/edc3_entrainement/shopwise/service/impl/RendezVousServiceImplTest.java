@@ -24,10 +24,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -140,5 +139,51 @@ class RendezVousServiceImplTest {
         assertEquals(RendezVousStatus.PLANIFIE, statutCaptor.getValue());
         assertTrue(hasClientCaptor.getValue());
         assertEquals(clientId, clientCaptor.getValue());
+    }
+
+    @Test
+    @DisplayName("doit utiliser les valeurs par defaut quand aucun filtre n est fourni")
+    void getRendezVous_withoutFilters_usesDefaultValues() {
+        when(rendezVousRepository.findByOptionalFilters(any(Boolean.class), any(LocalDateTime.class), any(LocalDateTime.class), any(Boolean.class), any(RendezVousStatus.class), any(Boolean.class), any(UUID.class)))
+                .thenReturn(List.of());
+
+        List<?> results = rendezVousService.getRendezVous(null, null, null);
+
+        assertEquals(0, results.size());
+
+        ArgumentCaptor<Boolean> hasDateCaptor = ArgumentCaptor.forClass(Boolean.class);
+        ArgumentCaptor<Boolean> hasStatutCaptor = ArgumentCaptor.forClass(Boolean.class);
+        ArgumentCaptor<Boolean> hasClientCaptor = ArgumentCaptor.forClass(Boolean.class);
+        verify(rendezVousRepository).findByOptionalFilters(
+                hasDateCaptor.capture(),
+                any(LocalDateTime.class),
+                any(LocalDateTime.class),
+                hasStatutCaptor.capture(),
+                any(RendezVousStatus.class),
+                hasClientCaptor.capture(),
+                any(UUID.class)
+        );
+
+        assertEquals(false, hasDateCaptor.getValue());
+        assertEquals(false, hasStatutCaptor.getValue());
+        assertEquals(false, hasClientCaptor.getValue());
+    }
+
+    @Test
+    @DisplayName("doit continuer meme si l enregistrement de transaction echoue")
+    void updateStatus_whenTransactionSaveFails_stillSavesRendezVous() {
+        UpdateRendezVousStatusDto dto = new UpdateRendezVousStatusDto();
+        dto.setStatut(RendezVousStatus.HONORE);
+
+        when(rendezVousRepository.findById(rendezVousId)).thenReturn(Optional.of(rendezVous));
+        when(rendezVousRepository.save(any(RendezVous.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        doThrow(new RuntimeException("erreur technique"))
+                .when(loyaltyTransactionRepository)
+                .save(any(LoyaltyTransaction.class));
+
+        var result = rendezVousService.updateRendezVousStatus(rendezVousId, dto);
+
+        assertEquals("HONORE", result.getStatut());
+        verify(rendezVousRepository).save(any(RendezVous.class));
     }
 }
