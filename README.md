@@ -1,42 +1,102 @@
-## Organisation & Workflow Git
+## Git Workflow (Feature Branch Workflow)
 
-Le projet suit un workflow base sur **GitHub Flow**:
-- Branches de travail: `feature/*`, `fix/*`
-- Branche protegee: `main`
-- Integration via Pull Request uniquement
+Le projet utilise un **Feature Branch Workflow**. Chaque fonctionnalité ou correction est développée sur une branche dédiée, puis intégrée dans `main` via une Pull Request.
 
-### Regle de merge demandee
+```text
+main     : ─── C1 ────── C2 ─── M1 ─── M2 ───
+                          │      ↑       ↑
+feature/a:                └── C3 ┘       │
+feature/b:                     └── C4 ── C5 ┘
+```
 
-Avant merge vers `main`, la CI simule un merge **sans commit** avec `main`:
-- `git merge --no-commit --no-ff origin/main`
-- Si le merge temporaire, le build et les tests passent, la PR peut etre mergee.
+### Fonctionnement
 
-Cette logique est automatisee dans GitHub Actions.
+1. Créer une branche depuis `main` :
 
-## CI/CD
+```bash
+git switch -c feature/nom-feature
+# ou
+git switch -c fix/nom-correctif
+```
 
-Fichier pipeline:
-- `.github/workflows/ci-cd.yml`
+2. Développer et réaliser les commits.
 
-### Sur Pull Request vers main
+3. Pousser la branche sur GitHub.
 
-La pipeline execute:
-1. Checkout du code
-2. Merge temporaire sans commit avec `main`
-3. Build backend (`./gradlew clean test bootJar`)
-4. Build frontend (`npm ci && npm run build`)
-5. Build Docker (`docker compose build`)
-6. Relance applicative de validation:
-    - `docker compose up --build -d`
-7. Nettoyage:
-    - `docker compose down -v`
+4. Ouvrir une Pull Request.
 
-### Sur push sur main
+5. Une fois la Pull Request validée, fusionner dans `main`.
 
-La pipeline execute une relance applicative:
-- `docker compose up --build -d`
+6. Supprimer la branche devenue inutile.
 
-## Notes
+### Convention de nommage
 
-- La partie push d'images DockerHub est volontairement reportee.
-- Le projet reste en API ouverte (pas de JWT, pas de securisation avancee), conforme a la contrainte.
+- `feature/<nom-feature>` : nouvelle fonctionnalité.
+- `fix/<nom-correctif>` : correction de bug.
+
+---
+
+## Pipeline CI/CD
+
+À chaque Pull Request, GitHub Actions exécute automatiquement la pipeline d'intégration continue afin de garantir que le projet reste fonctionnel avant toute fusion dans `main`.
+
+```text
+         main
+          │
+          │
+┌─────────┴─────────┐
+│                   │
+feature/ma-feature  fix/mon-correctif
+│                   │
+├── Développement
+├── Commits
+└── Push
+        │
+        ▼
+Pull Request vers main
+        │
+        ▼
+GitHub Actions (CI)
+├── Simulation du merge avec main
+├── Compilation du backend
+├── Tests backend + couverture JaCoCo
+├── Tests frontend + couverture
+├── Build du frontend
+├── Build des images Docker
+└── Validation avec Docker Compose
+        │
+        ▼
+✅ Tous les contrôles passent
+        │
+        ▼
+Merge dans main
+        │
+        ▼
+GitHub Actions (CD)
+├── Build des images Docker
+├── Publication sur Docker Hub
+└── Déploiement avec Docker Compose
+```
+```
+
+### Convention de nommage des branches
+
+- Nouvelle fonctionnalité
+
+```bash
+feature/nom-feature
+```
+
+- Correction de bug
+
+```bash
+fix/nom-correctif
+```
+
+### Règles
+
+- Ne jamais développer directement sur `main`.
+- Chaque évolution doit être réalisée dans une branche dédiée.
+- Une **Pull Request** est obligatoire avant toute fusion dans `main`.
+- La fusion n'est autorisée que si tous les contrôles de la pipeline CI sont validés.
+- Chaque fusion dans `main` déclenche automatiquement la pipeline de déploiement (CD).
