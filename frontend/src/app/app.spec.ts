@@ -1,25 +1,25 @@
 import { TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { AppComponent } from './app';
+import { App } from './app';
 
-describe('AppComponent', () => {
+describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AppComponent],
-      schemas: [NO_ERRORS_SCHEMA]
+      imports: [App]
     }).compileComponents();
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
+  it('doit creer l application', () => {
+    const fixture = TestBed.createComponent(App);
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
 
-  it('should render client management component', async () => {
-    const fixture = TestBed.createComponent(AppComponent);
+  it('doit afficher les sections principales', async () => {
+    const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('app-client-management')).toBeTruthy();
+    expect(compiled.querySelector('app-appointment-management')).toBeTruthy();
+    expect(compiled.querySelector('app-profile')).toBeTruthy();
   });
 });
