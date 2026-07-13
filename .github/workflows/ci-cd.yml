@@ -22,7 +22,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Initialiser un .env minimal (secours)
+      - name: Initialiser un .env minimal
         run: |
           cat > .env << EOF
           POSTGRES_DB=shopwise
@@ -138,7 +138,7 @@ jobs:
       - name: Recuperer main
         uses: actions/checkout@v4
 
-      - name: Initialiser un .env minimal (secours)
+      - name: Initialiser un .env minimal
         run: |
           cat > .env << EOF
           POSTGRES_DB=shopwise
