@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
+import { vi } from 'vitest';
 import { ClientManagementComponent } from './client-management.component';
 import { ClientApiService } from '../../services/client-api.service';
 
@@ -8,21 +9,21 @@ describe('ClientManagementComponent', () => {
   let component: ClientManagementComponent;
 
   const clientApiServiceMock = {
-    getClients: jasmine.createSpy('getClients'),
-    createClient: jasmine.createSpy('createClient'),
-    updateClient: jasmine.createSpy('updateClient')
+    getClients: vi.fn(),
+    createClient: vi.fn(),
+    updateClient: vi.fn()
   };
 
   beforeEach(async () => {
-    clientApiServiceMock.getClients.and.returnValue(of([]));
-    clientApiServiceMock.createClient.and.returnValue(of({
+    clientApiServiceMock.getClients.mockReturnValue(of([]));
+    clientApiServiceMock.createClient.mockReturnValue(of({
       id: '1',
       nom: 'Alice',
       email: 'a@a.com',
       telephone: '010203',
       pointsFidelite: 0
     }));
-    clientApiServiceMock.updateClient.and.returnValue(of({
+    clientApiServiceMock.updateClient.mockReturnValue(of({
       id: '1',
       nom: 'Alice',
       email: 'a@a.com',
@@ -42,16 +43,16 @@ describe('ClientManagementComponent', () => {
 
   it('doit charger les clients au demarrage', () => {
     expect(clientApiServiceMock.getClients).toHaveBeenCalled();
-    expect(component.loading).toBeFalse();
+    expect(component.loading).toBeFalsy();
   });
 
   it('doit gerer une erreur de chargement des clients', () => {
-    clientApiServiceMock.getClients.and.returnValue(throwError(() => new Error('erreur')));
+    clientApiServiceMock.getClients.mockReturnValue(throwError(() => new Error('erreur')));
 
     component.loadClients();
 
     expect(component.errorMessage).toBe('Impossible de charger les clients.');
-    expect(component.loading).toBeFalse();
+    expect(component.loading).toBeFalsy();
   });
 
   it('doit refuser la sauvegarde si nom/email manquants', () => {
@@ -79,12 +80,16 @@ describe('ClientManagementComponent', () => {
 
     component.submitForm();
 
-    expect(clientApiServiceMock.updateClient).toHaveBeenCalledWith('1', component.formModel);
+    expect(clientApiServiceMock.updateClient).toHaveBeenCalledWith('1', {
+      nom: 'Alice',
+      email: 'a@a.com',
+      telephone: '010203'
+    });
     expect(component.successMessage).toContain('mis a jour');
   });
 
   it('doit gerer une erreur de sauvegarde', () => {
-    clientApiServiceMock.createClient.and.returnValue(throwError(() => new Error('echec')));
+    clientApiServiceMock.createClient.mockReturnValue(throwError(() => new Error('echec')));
     component.formModel = { nom: 'Alice', email: 'a@a.com', telephone: '010203' };
 
     component.submitForm();
