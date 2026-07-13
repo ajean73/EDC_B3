@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
+import { vi } from 'vitest';
 import { AppointmentManagementComponent } from './appointment-management.component';
 import { AppointmentApiService } from '../../services/appointment-api.service';
 import { ClientApiService } from '../../services/client-api.service';
@@ -9,20 +10,20 @@ describe('AppointmentManagementComponent', () => {
   let component: AppointmentManagementComponent;
 
   const appointmentApiServiceMock = {
-    getAppointments: jasmine.createSpy('getAppointments'),
-    createAppointment: jasmine.createSpy('createAppointment'),
-    updateAppointmentStatus: jasmine.createSpy('updateAppointmentStatus')
+    getAppointments: vi.fn(),
+    createAppointment: vi.fn(),
+    updateAppointmentStatus: vi.fn()
   };
 
   const clientApiServiceMock = {
-    getClients: jasmine.createSpy('getClients')
+    getClients: vi.fn()
   };
 
   beforeEach(async () => {
-    clientApiServiceMock.getClients.and.returnValue(of([{ id: 'c1', nom: 'Alice', email: 'a@a.com', telephone: '0', pointsFidelite: 0 }]));
-    appointmentApiServiceMock.getAppointments.and.returnValue(of([]));
-    appointmentApiServiceMock.createAppointment.and.returnValue(of({}));
-    appointmentApiServiceMock.updateAppointmentStatus.and.returnValue(of({}));
+    clientApiServiceMock.getClients.mockReturnValue(of([{ id: 'c1', nom: 'Alice', email: 'a@a.com', telephone: '0', pointsFidelite: 0 }]));
+    appointmentApiServiceMock.getAppointments.mockReturnValue(of([]));
+    appointmentApiServiceMock.createAppointment.mockReturnValue(of({}));
+    appointmentApiServiceMock.updateAppointmentStatus.mockReturnValue(of({}));
 
     await TestBed.configureTestingModule({
       imports: [AppointmentManagementComponent],
@@ -40,16 +41,16 @@ describe('AppointmentManagementComponent', () => {
   it('doit charger les donnees initiales', () => {
     expect(clientApiServiceMock.getClients).toHaveBeenCalled();
     expect(appointmentApiServiceMock.getAppointments).toHaveBeenCalled();
-    expect(component.loading).toBeFalse();
+    expect(component.loading).toBeFalsy();
   });
 
   it('doit gerer erreur de chargement des rendez-vous', () => {
-    appointmentApiServiceMock.getAppointments.and.returnValue(throwError(() => new Error('erreur')));
+    appointmentApiServiceMock.getAppointments.mockReturnValue(throwError(() => new Error('erreur')));
 
     component.loadAppointments();
 
     expect(component.errorMessage).toContain('Impossible de charger les rendez-vous');
-    expect(component.loading).toBeFalse();
+    expect(component.loading).toBeFalsy();
   });
 
   it('doit construire des filtres et appeler l API', () => {
@@ -86,7 +87,7 @@ describe('AppointmentManagementComponent', () => {
   });
 
   it('doit gerer erreur de mise a jour de statut', () => {
-    appointmentApiServiceMock.updateAppointmentStatus.and.returnValue(throwError(() => new Error('echec')));
+    appointmentApiServiceMock.updateAppointmentStatus.mockReturnValue(throwError(() => new Error('echec')));
 
     component.updateStatus('rdv1', 'HONORE');
 

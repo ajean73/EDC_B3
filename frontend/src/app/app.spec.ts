@@ -1,16 +1,28 @@
 import { TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { Component } from '@angular/core';
 import { App } from './app';
+
+@Component({ selector: 'app-client-management', standalone: true, template: '' })
+class ClientManagementStubComponent {}
+
+@Component({ selector: 'app-appointment-management', standalone: true, template: '' })
+class AppointmentManagementStubComponent {}
+
+@Component({ selector: 'app-profile', standalone: true, template: '' })
+class ProfileStubComponent {}
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [App],
-      schemas: [NO_ERRORS_SCHEMA]
+      imports: [App]
     })
       .overrideComponent(App, {
         set: {
-          imports: [],
+          imports: [
+            ClientManagementStubComponent,
+            AppointmentManagementStubComponent,
+            ProfileStubComponent
+          ],
           template: `
             <app-client-management></app-client-management>
             <app-appointment-management></app-appointment-management>
