@@ -77,7 +77,6 @@ GitHub Actions (CD)
 ├── Publication sur Docker Hub
 └── Déploiement avec Docker Compose
 ```
-```
 
 ### Convention de nommage des branches
 
