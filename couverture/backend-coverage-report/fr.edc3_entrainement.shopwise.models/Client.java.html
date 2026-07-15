@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Client.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">shopwise</a> &gt; <a href="index.source.html" class="el_package">fr.edc3_entrainement.shopwise.models</a> &gt; <span class="el_source">Client.java</span></div><h1>Client.java</h1><pre class="source lang-java linenums">package fr.edc3_entrainement.shopwise.models;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Column;
+import jakarta.persistence.OneToMany;
+import java.util.List;
+import java.util.UUID;
+
+@Entity
+public class Client {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
+    private String nom;
+    private String email;
+    private String telephone;
+    private String password;
+    @Column(name = &quot;points_fidelite&quot;)
+    private int pointsFidelite;
+
+    @OneToMany(mappedBy = &quot;client&quot;)
+    private List&lt;RendezVous&gt; rendezVous;
+
+<span class="fc" id="L28">    public Client() {</span>
+<span class="fc" id="L29">    }</span>
+
+<span class="nc" id="L31">    public Client(String nom, String email, String telephone, int pointsFidelite) {</span>
+<span class="nc" id="L32">        this.nom = nom;</span>
+<span class="nc" id="L33">        this.email = email;</span>
+<span class="nc" id="L34">        this.telephone = telephone;</span>
+<span class="nc" id="L35">        this.pointsFidelite = pointsFidelite;</span>
+<span class="nc" id="L36">    }</span>
+
+    public UUID getId() {
+<span class="fc" id="L39">        return id;</span>
+    }
+
+
+    public void setId(UUID id) {
+<span class="fc" id="L44">        this.id = id;</span>
+<span class="fc" id="L45">    }</span>
+
+    public String getNom() {
+<span class="fc" id="L48">        return nom;</span>
+    }
+
+    public void setNom(String nom) {
+<span class="fc" id="L52">        this.nom = nom;</span>
+<span class="fc" id="L53">    }</span>
+
+    public String getEmail() {
+<span class="fc" id="L56">        return email;</span>
+    }
+
+    public void setEmail(String email) {
+<span class="fc" id="L60">        this.email = email;</span>
+<span class="fc" id="L61">    }</span>
+
+    public String getTelephone() {
+<span class="fc" id="L64">        return telephone;</span>
+    }
+
+    public void setTelephone(String telephone) {
+<span class="fc" id="L68">        this.telephone = telephone;</span>
+<span class="fc" id="L69">    }</span>
+
+<span class="fc" id="L71">    public String getPassword() { return password; }</span>
+<span class="fc" id="L72">    public void setPassword(String password) { this.password = password; }</span>
+
+    public int getPointsFidelite() {
+<span class="fc" id="L75">        return pointsFidelite;</span>
+    }
+
+    public void setPointsFidelite(int pointsFidelite) {
+<span class="fc" id="L79">        this.pointsFidelite = pointsFidelite;</span>
+<span class="fc" id="L80">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

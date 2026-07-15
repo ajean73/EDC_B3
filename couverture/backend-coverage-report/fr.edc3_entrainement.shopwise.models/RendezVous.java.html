@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RendezVous.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">shopwise</a> &gt; <a href="index.source.html" class="el_package">fr.edc3_entrainement.shopwise.models</a> &gt; <span class="el_source">RendezVous.java</span></div><h1>RendezVous.java</h1><pre class="source lang-java linenums">package fr.edc3_entrainement.shopwise.models;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Entity
+@Table(name = &quot;rendez_vous&quot;)
+public class RendezVous {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
+
+    @Column(name = &quot;date_rendez_vous&quot;, nullable = false)
+    private LocalDateTime dateRendezVous;
+
+    @Column(nullable = false)
+    private String service;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RendezVousStatus statut;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;client_id&quot;, nullable = false)
+    @JsonIgnore
+    private Client client;
+
+<span class="fc" id="L31">    public RendezVous() {</span>
+<span class="fc" id="L32">    }</span>
+
+    // Getters and Setters
+
+    public UUID getId() {
+<span class="fc" id="L37">        return id;</span>
+    }
+
+    public void setId(UUID id) {
+<span class="fc" id="L41">        this.id = id;</span>
+<span class="fc" id="L42">    }</span>
+
+    public LocalDateTime getDateRendezVous() {
+<span class="fc" id="L45">        return dateRendezVous;</span>
+    }
+
+    public void setDateRendezVous(LocalDateTime dateRendezVous) {
+<span class="fc" id="L49">        this.dateRendezVous = dateRendezVous;</span>
+<span class="fc" id="L50">    }</span>
+
+    public String getService() {
+<span class="fc" id="L53">        return service;</span>
+    }
+
+    public void setService(String service) {
+<span class="fc" id="L57">        this.service = service;</span>
+<span class="fc" id="L58">    }</span>
+
+    public RendezVousStatus getStatut() {
+<span class="fc" id="L61">        return statut;</span>
+    }
+
+    public void setStatut(RendezVousStatus statut) {
+<span class="fc" id="L65">        this.statut = statut;</span>
+<span class="fc" id="L66">    }</span>
+
+    public Client getClient() {
+<span class="fc" id="L69">        return client;</span>
+    }
+
+    public void setClient(Client client) {
+<span class="fc" id="L73">        this.client = client;</span>
+<span class="fc" id="L74">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
