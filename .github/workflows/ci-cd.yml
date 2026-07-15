@@ -27,7 +27,7 @@ jobs:
           cat > .env << EOF
           POSTGRES_DB=shopwise
           POSTGRES_USER=admin
-          POSTGRES_PASSWORD=ci_password_change_me
+          POSTGRES_PASSWORD=ci_password
           APP_CORS_ALLOWED_ORIGINS=http://localhost:4200
           EOF
 
